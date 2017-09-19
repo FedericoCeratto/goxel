@@ -15,6 +15,7 @@ emscripten = ARGUMENTS.get('emscripten', 0)
 werror = int(ARGUMENTS.get("werror", 1))
 clang = int(ARGUMENTS.get("clang", 0))
 argp_standalone = int(ARGUMENTS.get("argp_standalone", 0))
+security = int(ARGUMENTS.get('security', 1))
 sound = False
 
 if profile: debug = 0
@@ -120,6 +121,10 @@ if target_os == 'js':
 if sound:
     env.Append(LIBS='openal')
     env.Append(CCFLAGS='-DSOUND=OPENAL')
+
+if security:
+    env.Append(CFLAGS='-Wformat -Wformat-security -Werror=format-security -D_FORTIFY_SOURCE=2 -fPIE -pie')
+    env.Append(LINKFLAGS='-z relro -z now')
 
 # Append external environment flags
 env.Append(
